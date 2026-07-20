@@ -478,7 +478,7 @@
 /* =========================================================
    CONFIGURAÇÃO — cole aqui a URL do seu Web App do Apps Script
    ========================================================= */
-const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycby5Ky7V1cDadtlT7JnuP7oAw6vQ7SoqCVWcodYnjLnabB91w4GGci-KhyI7L26R56XU/exec";
+const ENDPOINT_URL = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
 
 /* =========================================================
    AUTENTICAÇÃO
@@ -893,6 +893,7 @@ function abrirDetalhe(indice){
       <div class="kv-item"><span>Tipo de veículo</span><b>${escapeHtml(m['Tipo de Veículo']||'—')}</b></div>
       <div class="kv-item"><span>Cadastrado em</span><b>${escapeHtml(m['Data']||'')} ${escapeHtml(m['Hora']||'')}</b></div>
       <div class="kv-item"><span>Protocolo</span><b>${escapeHtml(m['Protocolo']||'—')}</b></div>
+      <div class="kv-item"><span>Leitura por IA</span><b>${escapeHtml(m['Status Leitura IA']||'Pendente')}</b></div>
     </div>
     <div class="section-title">CNH (lido automaticamente)</div>
     <div class="kv">
