@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo LLE — Sistema de Motoristas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1F44; --navy-2:#123061; --gold:#E8A93D; --gold-2:#C98A1E;
+    --green:#1F8A4C; --green-bg:#E9F7EF; --amber:#946200; --amber-bg:#FFF8E6;
+    --red:#C0392B; --red-bg:#FDECEA;
+    --paper:#F6F7FA; --ink:#16213E; --ink-soft:#5B6478; --line:#DCE1EA; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Montserrat',sans-serif; margin:0;}
+  button{font-family:'Inter',sans-serif;}
+
+  /* ---------- topo / marca ---------- */
+  .topbar{background:linear-gradient(100deg,var(--navy) 0%, var(--navy-2) 60%, #1a3f7a 100%); color:#fff; padding:20px 24px; position:relative; overflow:hidden;}
+  .topbar::before{content:""; position:absolute; inset:0; background:repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 2px, transparent 2px 90px); pointer-events:none;}
+  .topbar-inner{max-width:1080px; margin:0 auto; position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+  .brand-row{display:flex; align-items:center; gap:10px; font-size:12.5px; letter-spacing:.14em; font-weight:700; color:var(--gold); text-transform:uppercase;}
+  .brand-row .dot{width:4px;height:4px;border-radius:50%;background:var(--gold); opacity:.7;}
+  .topbar h1{font-size:20px; font-weight:800; margin-top:4px;}
+  .user-chip{display:flex; align-items:center; gap:10px; font-size:13px; color:#C6D2EA;}
+  .user-chip b{color:#fff;}
+  .user-chip .role-badge{background:rgba(232,169,61,.18); color:var(--gold); border:1px solid rgba(232,169,61,.4); border-radius:999px; padding:3px 10px; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.04em;}
+  .btn-sair{background:transparent; border:1.5px solid rgba(255,255,255,.3); color:#fff; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer;}
+  .btn-sair:hover{border-color:#fff;}
+
+  /* ---------- abas ---------- */
+  .tabs{background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10;}
+  .tabs-inner{max-width:1080px; margin:0 auto; display:flex; gap:4px; padding:0 24px; overflow-x:auto;}
+  .tab-btn{
+    border:none; background:transparent; padding:16px 18px; font-size:14px; font-weight:600; color:var(--ink-soft);
+    cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap;
+  }
+  .tab-btn:hover{color:var(--ink);}
+  .tab-btn.active{color:var(--navy); border-bottom-color:var(--gold);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:28px 24px 60px;}
+  .card{background:#fff; border-radius:16px; box-shadow:0 12px 40px -20px rgba(10,31,68,.25); padding:28px;}
+
+  /* ---------- login / cadastro ---------- */
+  #view-login .topbar{padding-bottom:0;}
+  .login-wrap{min-height:calc(100vh - 74px); display:flex; align-items:center; justify-content:center; padding:24px;}
+  .login-card{background:#fff; border-radius:18px; padding:36px 32px; max-width:400px; width:100%; box-shadow:0 20px 50px -20px rgba(10,31,68,.35);}
+  .login-card .eyebrow{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-2); font-weight:700;}
+  .login-card h2{font-size:21px; color:var(--navy); margin-top:6px;}
+  .login-card p.desc{color:var(--ink-soft); font-size:13.5px; margin-top:8px; line-height:1.5;}
+  .login-toggle{display:flex; gap:6px; margin:20px 0 16px; background:var(--paper); border-radius:10px; padding:4px;}
+  .login-toggle button{flex:1; border:none; background:transparent; padding:9px; border-radius:8px; font-size:13.5px; font-weight:700; color:var(--ink-soft); cursor:pointer;}
+  .login-toggle button.active{background:#fff; color:var(--navy); box-shadow:0 2px 6px rgba(10,31,68,.12);}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:13px; font-weight:600; margin-bottom:5px;}
+  .field input, .field select{
+    width:100%; padding:11px 13px; border:1.5px solid var(--line); border-radius:9px; font-size:14.5px;
+    font-family:'Inter',sans-serif; color:var(--ink); background:#fff;
+  }
+  .field input:focus, .field select:focus{outline:none; border-color:var(--navy-2); box-shadow:0 0 0 3px rgba(18,48,97,.12);}
+  .field .err{display:none; color:var(--red); font-size:12px; margin-top:4px; font-weight:500;}
+  .field.has-error .err{display:block;}
+  .field.has-error input, .field.has-error select{border-color:var(--red);}
+
+  .btn{font-weight:700; font-size:14.5px; border:none; border-radius:10px; padding:12px 22px; cursor:pointer; width:100%;}
+  .btn-primary{background:var(--navy); color:#fff;}
+  .btn-primary:hover{background:var(--navy-2);}
+  .btn-primary[disabled]{background:#AFC0DD; cursor:not-allowed;}
+  .btn-ghost{background:transparent; color:var(--ink-soft); border:1.5px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--ink-soft); color:var(--ink);}
+
+  .msg-line{display:flex; align-items:center; gap:8px; font-size:13px; margin-top:12px; min-height:18px;}
+  .msg-line.error{color:var(--red);}
+  .msg-line.success{color:var(--green);}
+  .spinner{width:14px; height:14px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--navy-2); animation:spin .7s linear infinite; display:none;}
+  .spinner.on{display:inline-block;}
+  @keyframes spin{ to{transform:rotate(360deg);} }
+
+  /* ---------- badges de status ---------- */
+  .badge{display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700;}
+  .badge.ok{background:var(--green-bg); color:var(--green);}
+  .badge.pendente{background:var(--amber-bg); color:var(--amber);}
+  .badge.erro{background:var(--red-bg); color:var(--red);}
+
+  /* ---------- stepper (cadastro de motorista) ---------- */
+  .route{max-width:520px; margin:0 auto 24px;}
+  .route-track{display:flex; align-items:center; position:relative;}
+  .route-line{position:absolute; left:22px; right:22px; top:19px; height:2px; background:var(--line); z-index:0;}
+  .route-line-fill{position:absolute; left:22px; top:19px; height:2px; background:var(--gold); z-index:0; width:0%; transition:width .4s ease;}
+  .stop{flex:1; text-align:center; position:relative; z-index:1;}
+  .stop-dot{width:36px; height:36px; margin:0 auto 6px; border-radius:50%; background:var(--paper); border:2px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:800; font-size:13px; color:var(--ink-soft); transition:all .3s ease;}
+  .stop.active .stop-dot{background:var(--gold); border-color:var(--gold); color:var(--navy);}
+  .stop.done .stop-dot{background:var(--green); border-color:var(--green); color:#fff;}
+  .stop-label{font-size:11.5px; color:var(--ink-soft); font-weight:600;}
+  .stop.active .stop-label{color:var(--navy);}
+
+  .panel-step{display:none;}
+  .panel-step.active{display:block;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:560px){.row2{grid-template-columns:1fr;}}
+
+  .uploads{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:560px){.uploads{grid-template-columns:1fr;}}
+  .upload-card{border:1.5px dashed var(--line); border-radius:12px; padding:16px; position:relative; cursor:pointer; background:#FAFBFD; text-align:left;}
+  .upload-card:hover{border-color:var(--gold-2); background:#FEFBF2;}
+  .upload-card.filled{border-style:solid; border-color:var(--green); background:#F3FBF6;}
+  .upload-card input[type=file]{position:absolute; inset:0; opacity:0; cursor:pointer;}
+  .upload-icon{width:34px; height:34px; border-radius:9px; background:var(--navy); display:flex; align-items:center; justify-content:center; color:var(--gold); font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; margin-bottom:10px;}
+  .upload-card.filled .upload-icon{background:var(--green); color:#fff;}
+  .upload-title{font-size:14px; font-weight:700;}
+  .upload-sub{font-size:12px; color:var(--ink-soft); margin-top:3px;}
+  .upload-file{font-size:12px; color:var(--green); font-weight:600; margin-top:8px; word-break:break-all;}
+  .upload-check{position:absolute; top:12px; right:12px; width:22px; height:22px; border-radius:50%; background:var(--green); color:#fff; font-size:13px; display:none; align-items:center; justify-content:center;}
+  .upload-card.filled .upload-check{display:flex;}
+
+  .actions{display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;}
+  .actions .btn{width:auto;}
+
+  .review-list{border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  .review-row{display:flex; justify-content:space-between; padding:11px 16px; font-size:14px; border-bottom:1px solid var(--line);}
+  .review-row:last-child{border-bottom:none;}
+  .review-row span:first-child{color:var(--ink-soft);}
+  .review-row span:last-child{font-weight:600; text-align:right; max-width:60%;}
+
+  .success{text-align:center; padding:16px 0 4px;}
+  .success .badge-big{width:60px; height:60px; border-radius:50%; background:var(--green-bg); color:var(--green); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:28px;}
+  .protocol{margin:16px auto 0; display:inline-block; background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:9px 16px; font-family:'Montserrat',sans-serif; font-weight:800; color:var(--navy); font-size:14px;}
+
+  /* ---------- painel de motoristas ---------- */
+  .stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px;}
+  .stat{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:12px 18px; min-width:120px;}
+  .stat b{display:block; font-family:'Montserrat',sans-serif; font-size:20px; color:var(--navy);}
+  .stat span{font-size:12px; color:var(--ink-soft);}
+  .toolbar{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px; align-items:center;}
+  .toolbar input{flex:1; min-width:200px; padding:11px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:14px;}
+  .toolbar button{padding:11px 16px; border-radius:10px; border:1.5px solid var(--line); background:#fff; font-weight:600; font-size:13.5px; cursor:pointer; color:var(--ink-soft);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  thead th{text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); font-weight:700; padding:10px 12px; border-bottom:2px solid var(--line);}
+  tbody td{padding:12px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tbody tr:hover{background:#FAFBFD;}
+  .nome-cell{font-weight:700; color:var(--navy);}
+  .sub{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+  .btn-ver{padding:6px 13px; border-radius:8px; border:1.5px solid var(--navy); color:var(--navy); background:#fff; font-weight:700; font-size:12.5px; cursor:pointer;}
+  .btn-ver:hover{background:var(--navy); color:#fff;}
+  .empty, .loading, .error-box{text-align:center; padding:50px 20px; color:var(--ink-soft);}
+  .error-box{color:var(--red);}
+
+  .overlay{position:fixed; inset:0; background:rgba(10,20,40,.55); display:none; align-items:center; justify-content:center; padding:20px; z-index:50;}
+  .overlay.open{display:flex;}
+  .modal{background:#fff; border-radius:16px; max-width:620px; width:100%; max-height:88vh; overflow-y:auto; padding:26px;}
+  .modal-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;}
+  .modal-head h2{font-size:19px; color:var(--navy);}
+  .modal-close{border:none; background:var(--paper); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:15px; color:var(--ink-soft);}
+  .section-title{font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--gold-2); font-weight:700; margin:18px 0 8px;}
+  .kv{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px;}
+  .kv-item{background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px 12px;}
+  .kv-item span{display:block; font-size:10.5px; color:var(--ink-soft); text-transform:uppercase;}
+  .kv-item b{font-size:13.5px;}
+  .doclinks{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;}
+  .doclinks a{font-size:12.5px; font-weight:700; color:var(--navy); text-decoration:none; border:1.5px solid var(--line); border-radius:8px; padding:7px 11px;}
+  .doclinks a:hover{border-color:var(--navy); background:var(--paper);}
+
+  /* ---------- extrator ---------- */
+  .results{display:none;}
+  .results.show{display:block;}
+
+  footer{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:0 24px 40px;}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     TELA DE LOGIN / CADASTRO (visível antes de autenticar)
+     ============================================================ -->
+<div id="view-login">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="brand-row">GRUPO LLE <span class="dot"></span> TRANSPORTES</div>
+        <h1>Sistema de Motoristas</h1>
+      </div>
+    </div>
+  </div>
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-toggle">
+        <button type="button" class="active" id="toggleLogin">Entrar</button>
+        <button type="button" id="toggleCadastro">Criar conta</button>
+      </div>
+
+      <!-- form de login -->
+      <form id="formLogin">
+        <div class="eyebrow">Acesso ao sistema</div>
+        <h2>Entrar</h2>
+        <p class="desc">Colaboradores do Grupo LLE e transportadoras cadastradas usam o mesmo login.</p>
+        <div class="field" id="f-loginUsuario">
+          <label for="loginUsuario">Usuário</label>
+          <input type="text" id="loginUsuario" autocomplete="username">
+          <div class="err">Informe seu usuário.</div>
+        </div>
+        <div class="field" id="f-loginSenha">
+          <label for="loginSenha">Senha</label>
+          <input type="password" id="loginSenha" autocomplete="current-password">
+          <div class="err">Informe sua senha.</div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnLogin">Entrar</button>
+        <div class="msg-line" id="msgLogin"><span class="spinner" id="spinnerLogin"></span><span id="msgLoginText"></span></div>
+      </form>
+
+      <!-- form de cadastro de usuário -->
+      <form id="formCadastroUsuario" style="display:none;">
+        <div class="eyebrow">Novo acesso</div>
+        <h2>Criar conta</h2>
+        <p class="desc">Peça o código de cadastro ao Grupo LLE antes de criar sua conta.</p>
+        <div class="field" id="f-novoNome">
+          <label for="novoNome">Seu nome</label>
+          <input type="text" id="novoNome">
+          <div class="err">Informe seu nome.</div>
+        </div>
+        <div class="field" id="f-tipoAcesso">
+          <label for="tipoAcesso">Tipo de acesso</label>
+          <select id="tipoAcesso">
+            <option value="" selected disabled>Selecione</option>
+            <option value="LLE">Colaborador Grupo LLE</option>
+            <option value="Transportadora">Transportadora</option>
+          </select>
+          <div class="err">Selecione o tipo de acesso.</div>
+        </div>
+        <div class="field" id="f-novaTransportadora" style="display:none;">
+          <label for="novaTransportadora">Transportadora</label>
+          <select id="novaTransportadora">
+            <option value="" selected disabled>Selecione</option>
+            <option>MP Transportes</option>
+            <option>HJT Transportes</option>
+            <option>PM&amp;F Logistics</option>
+            <option>FG Transportes</option>
+            <option>DMD Transportes</option>
+            <option>JSR Transportes</option>
+            <option>Alfa Cargo</option>
+          </select>
+          <div class="err">Selecione a transportadora.</div>
+        </div>
+        <div class="field" id="f-novoUsuario">
+          <label for="novoUsuario">Usuário (login)</label>
+          <input type="text" id="novoUsuario" autocomplete="username">
+          <div class="err">Escolha um nome de usuário (mín. 3 caracteres).</div>
+        </div>
+        <div class="field" id="f-novaSenha">
+          <label for="novaSenha">Senha</label>
+          <input type="password" id="novaSenha" autocomplete="new-password">
+          <div class="err">Mínimo de 6 caracteres.</div>
+        </div>
+        <div class="field" id="f-codigoCadastro">
+          <label for="codigoCadastro">Código de cadastro</label>
+          <input type="text" id="codigoCadastro">
+          <div class="err">Informe o código de cadastro fornecido pelo Grupo LLE.</div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnCadastrarUsuario">Criar conta</button>
+        <div class="msg-line" id="msgCadastro"><span class="spinner" id="spinnerCadastro"></span><span id="msgCadastroText"></span></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APP (visível só depois de autenticar)
+     ============================================================ -->
+<div id="view-app" style="display:none;">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="brand-row">GRUPO LLE <span class="dot"></span> TRANSPORTES</div>
+        <h1>Sistema de Motoristas</h1>
+      </div>
+      <div class="user-chip">
+        <span>Logado como <b id="chipNome"></b></span>
+        <span class="role-badge" id="chipRole"></span>
+        <button class="btn-sair" id="btnSair">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tabs-inner">
+      <button class="tab-btn active" data-tab="cadastro">Cadastro de Motorista</button>
+      <button class="tab-btn" data-tab="painel">Painel de Motoristas</button>
+      <button class="tab-btn" data-tab="extrator">Extrator de Documentos</button>
+    </div>
+  </div>
+
+  <!-- ---------------- ABA: CADASTRO DE MOTORISTA ---------------- -->
+  <div class="view active" id="view-cadastro">
+    <div class="wrap">
+      <div class="route">
+        <div class="route-track">
+          <div class="route-line"></div>
+          <div class="route-line-fill" id="routeFill"></div>
+          <div class="stop active" data-stop="1"><div class="stop-dot">1</div><div class="stop-label">Dados</div></div>
+          <div class="stop" data-stop="2"><div class="stop-dot">2</div><div class="stop-label">Documentos</div></div>
+          <div class="stop" data-stop="3"><div class="stop-dot">3</div><div class="stop-label">Revisão</div></div>
+          <div class="stop" data-stop="4"><div class="stop-dot">✓</div><div class="stop-label">Enviado</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <form id="cadastroForm" novalidate>
+          <div class="panel-step active" data-panel="1">
+            <div class="field" id="f-nome">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" placeholder="Ex.: João da Silva Pereira">
+              <div class="err">Informe o nome completo.</div>
+            </div>
+            <div class="row2">
+              <div class="field" id="f-cpf">
+                <label for="cpf">CPF</label>
+                <input type="text" id="cpf" inputmode="numeric" maxlength="14" placeholder="000.000.000-00">
+                <div class="err">CPF inválido. Confira os números.</div>
+              </div>
+              <div class="field" id="f-tipoVeiculo">
+                <label for="tipoVeiculo">Tipo de veículo</label>
+                <select id="tipoVeiculo">
+                  <option value="" selected disabled>Selecione</option>
+                  <option>Moto</option><option>Fiorino / Utilitário</option><option>VUC</option>
+                  <option>3/4</option><option>Toco</option><option>Truck</option>
+                  <option>Carreta</option><option>Bitrem</option><option>Outro</option>
+                </select>
+                <div class="err">Selecione o tipo de veículo.</div>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field" id="f-transportadora">
+                <label for="transportadora">Transportadora</label>
+                <select id="transportadora">
+                  <option value="" selected disabled>Selecione</option>
+                  <option>MP Transportes</option><option>HJT Transportes</option><option>PM&amp;F Logistics</option>
+                  <option>FG Transportes</option><option>DMD Transportes</option><option>JSR Transportes</option>
+                  <option>Alfa Cargo</option>
+                </select>
+                <div class="err">Selecione a transportadora.</div>
+              </div>
+              <div class="field" id="f-telefone">
+                <label for="telefone">Telefone / WhatsApp</label>
+                <input type="tel" id="telefone" inputmode="numeric" maxlength="15" placeholder="(00) 00000-0000">
+                <div class="err">Informe um telefone válido com DDD.</div>
+              </div>
+            </div>
+            <div class="actions"><span></span><button type="button" class="btn btn-primary" id="toStep2">Continuar</button></div>
+          </div>
+
+          <div class="panel-step" data-panel="2">
+            <div class="uploads">
+              <label class="upload-card" id="card-cnh">
+                <input type="file" id="doc-cnh" accept=".pdf,image/*">
+                <div class="upload-icon">CNH</div><div class="upload-title">CNH</div>
+                <div class="upload-sub">Frente e verso</div><div class="upload-file"></div><div class="upload-check">✓</div>
+              </label>
+              <label class="upload-card" id="card-crlv">
+                <input type="file" id="doc-crlv" accept=".pdf,image/*">
+                <div class="upload-icon">CRLV</div><div class="upload-title">CRLV</div>
+                <div class="upload-sub">Ano vigente</div><div class="upload-file"></div><div class="upload-check">✓</div>
+              </label>
+              <label class="upload-card" id="card-foto">
+                <input type="file" id="doc-foto" accept="image/*">
+                <div class="upload-icon">FOTO</div><div class="upload-title">Foto 5x7</div>
+                <div class="upload-sub">Fundo neutro</div><div class="upload-file"></div><div class="upload-check">✓</div>
+              </label>
+              <label class="upload-card" id="card-comprovante">
+                <input type="file" id="doc-comprovante" accept=".pdf,image/*">
+                <div class="upload-icon">END.</div><div class="upload-title">Comprovante de residência</div>
+                <div class="upload-sub">Últimos 3 meses</div><div class="upload-file"></div><div class="upload-check">✓</div>
+              </label>
+            </div>
+            <div class="err" id="err-docs" style="display:none; margin-top:12px;">Envie os 4 documentos para continuar.</div>
+            <div class="actions">
+              <button type="button" class="btn btn-ghost" id="toStep1">Voltar</button>
+              <button type="button" class="btn btn-primary" id="toStep3">Continuar</button>
+            </div>
+          </div>
+
+          <div class="panel-step" data-panel="3">
+            <div class="review-list" id="reviewList"></div>
+            <div class="actions">
+              <button type="button" class="btn btn-ghost" id="toStep2b">Voltar</button>
+              <button type="submit" class="btn btn-primary" id="submitBtn">Enviar cadastro</button>
+            </div>
+            <div class="msg-line" id="statusLine"><span class="spinner" id="spinner"></span><span id="statusText"></span></div>
+          </div>
+
+          <div class="panel-step" data-panel="4">
+            <div class="success">
+              <div class="badge-big">✓</div>
+              <h2 style="color:var(--navy)">Cadastro enviado</h2>
+              <p style="color:var(--ink-soft)">Recebemos os dados e documentos. Eles serão conferidos antes da liberação.</p>
+              <div class="protocol" id="protocolo">—</div>
+              <div style="margin-top:20px;"><button type="button" class="btn btn-ghost" id="novoCadastroBtn">Cadastrar outro motorista</button></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------------- ABA: PAINEL DE MOTORISTAS ---------------- -->
+  <div class="view" id="view-painel">
+    <div class="wrap">
+      <div class="stat-row">
+        <div class="stat"><b id="statTotal">—</b><span>motoristas</span></div>
+        <div class="stat"><b id="statOk">—</b><span>leitura de docs ok</span></div>
+        <div class="stat"><b id="statPendente">—</b><span>leitura pendente/falhou</span></div>
+      </div>
+      <div class="card">
+        <div class="toolbar">
+          <input type="text" id="busca" placeholder="Buscar por nome, CPF ou transportadora...">
+          <button id="btnAtualizarPainel">↻ Atualizar</button>
+        </div>
+        <div id="conteudoPainel"><div class="loading">Carregando motoristas...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------------- ABA: EXTRATOR ---------------- -->
+  <div class="view" id="view-extrator">
+    <div class="wrap">
+      <div class="card">
+        <div style="margin-bottom:20px;">
+          <h2 style="font-size:18px; color:var(--navy);">Extrator de CNH e CRLV</h2>
+          <p style="color:var(--ink-soft); font-size:14px; margin-top:6px;">Anexe os dois documentos — a IA lê e extrai os dados automaticamente e já salva numa planilha.</p>
+        </div>
+        <form id="extratorForm">
+          <div class="uploads" style="margin-bottom:18px;">
+            <label class="upload-card" id="card-ex-cnh">
+              <input type="file" id="ex-doc-cnh" accept=".pdf,image/*">
+              <div class="upload-icon">CNH</div><div class="upload-title">CNH</div>
+              <div class="upload-sub">Foto ou PDF, frente e verso</div><div class="upload-file"></div><div class="upload-check">✓</div>
+            </label>
+            <label class="upload-card" id="card-ex-crlv">
+              <input type="file" id="ex-doc-crlv" accept=".pdf,image/*">
+              <div class="upload-icon">CRLV</div><div class="upload-title">CRLV</div>
+              <div class="upload-sub">Documento do veículo, ano vigente</div><div class="upload-file"></div><div class="upload-check">✓</div>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary" id="enviarExtratorBtn">Enviar e extrair dados</button>
+          <div class="msg-line" id="statusLineExtrator"><span class="spinner" id="spinnerExtrator"></span><span id="statusTextExtrator"></span></div>
+        </form>
+
+        <div class="results" id="resultsExtrator">
+          <div style="display:flex; align-items:center; gap:10px; margin:22px 0 10px;">
+            <div class="badge ok" style="width:26px;height:26px;border-radius:50%;justify-content:center;">✓</div>
+            <h2 style="font-size:16px; color:var(--navy);">Dados extraídos</h2>
+            <span style="font-size:12px; color:var(--ink-soft); margin-left:auto;" id="protocoloExtrator"></span>
+          </div>
+          <div class="section-title">CNH</div>
+          <div class="kv" id="kvCnh"></div>
+          <div class="section-title">CRLV</div>
+          <div class="kv" id="kvCrlv"></div>
+          <button type="button" class="btn btn-ghost" style="margin-top:18px;" id="againBtnExtrator">Enviar outro documento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- MODAL DE DETALHE (painel) ---------------- -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalConteudo"></div>
+</div>
+
+<footer>Grupo LLE · Transportes · Sistema de Motoristas</footer>
+
+<script>
+/* =========================================================
+   CONFIGURAÇÃO — cole aqui a URL do seu Web App do Apps Script
+   ========================================================= */
+const ENDPOINT_URL = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
+
+/* =========================================================
+   AUTENTICAÇÃO
+   ========================================================= */
+const SESSION_KEY = "lleSistemaSessao";
+let sessaoAtual = null; // { usuario, senhaHash, nome, role, transportadora }
+
+async function sha256(texto){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function endpointConfigurado(){
+  return ENDPOINT_URL && ENDPOINT_URL.indexOf('COLE_AQUI') === -1;
+}
+
+function setErrorAuth(fieldId, show){
+  const el = document.getElementById(fieldId);
+  if(el) el.classList.toggle('has-error', show);
+}
+
+// ---- toggles login/cadastro ----
+document.getElementById('toggleLogin').addEventListener('click', () => {
+  document.getElementById('toggleLogin').classList.add('active');
+  document.getElementById('toggleCadastro').classList.remove('active');
+  document.getElementById('formLogin').style.display = 'block';
+  document.getElementById('formCadastroUsuario').style.display = 'none';
+});
+document.getElementById('toggleCadastro').addEventListener('click', () => {
+  document.getElementById('toggleCadastro').classList.add('active');
+  document.getElementById('toggleLogin').classList.remove('active');
+  document.getElementById('formCadastroUsuario').style.display = 'block';
+  document.getElementById('formLogin').style.display = 'none';
+});
+document.getElementById('tipoAcesso').addEventListener('change', (e) => {
+  document.getElementById('f-novaTransportadora').style.display = e.target.value === 'Transportadora' ? 'block' : 'none';
+});
+
+// ---- login ----
+document.getElementById('formLogin').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const usuario = document.getElementById('loginUsuario').value.trim();
+  const senha = document.getElementById('loginSenha').value;
+  setErrorAuth('f-loginUsuario', !usuario);
+  setErrorAuth('f-loginSenha', !senha);
+  if(!usuario || !senha) return;
+
+  if(!endpointConfigurado()){
+    const msg = document.getElementById('msgLogin');
+    msg.classList.add('error');
+    document.getElementById('msgLoginText').textContent = 'Sistema ainda não conectado à planilha. Veja o SETUP.md.';
+    return;
+  }
+
+  const btn = document.getElementById('btnLogin');
+  const spinner = document.getElementById('spinnerLogin');
+  const msg = document.getElementById('msgLogin');
+  const msgText = document.getElementById('msgLoginText');
+  msg.classList.remove('error','success');
+  btn.disabled = true; spinner.classList.add('on'); msgText.textContent = 'Entrando...';
+
+  try{
+    const senhaHash = await sha256(senha);
+    const resp = await fetch(`${ENDPOINT_URL}?action=login&usuario=${encodeURIComponent(usuario)}&senhaHash=${encodeURIComponent(senhaHash)}`);
+    const data = await resp.json();
+    if(!data.ok){ throw new Error(data.error || 'Usuário ou senha incorretos.'); }
+    sessaoAtual = { usuario: data.usuario.usuario, senhaHash, nome: data.usuario.nome, role: data.usuario.role, transportadora: data.usuario.transportadora };
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessaoAtual));
+    entrarNoApp();
+  } catch(err){
+    msg.classList.add('error');
+    msgText.textContent = err.message;
+  } finally {
+    btn.disabled = false; spinner.classList.remove('on');
+  }
+});
+
+// ---- cadastro de usuário ----
+document.getElementById('formCadastroUsuario').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nome = document.getElementById('novoNome').value.trim();
+  const tipoAcesso = document.getElementById('tipoAcesso').value;
+  const transportadora = document.getElementById('novaTransportadora').value;
+  const usuario = document.getElementById('novoUsuario').value.trim();
+  const senha = document.getElementById('novaSenha').value;
+  const codigo = document.getElementById('codigoCadastro').value.trim();
+
+  let ok = true;
+  setErrorAuth('f-novoNome', nome.length < 2); if(nome.length < 2) ok = false;
+  setErrorAuth('f-tipoAcesso', !tipoAcesso); if(!tipoAcesso) ok = false;
+  if(tipoAcesso === 'Transportadora'){ setErrorAuth('f-novaTransportadora', !transportadora); if(!transportadora) ok = false; }
+  setErrorAuth('f-novoUsuario', usuario.length < 3); if(usuario.length < 3) ok = false;
+  setErrorAuth('f-novaSenha', senha.length < 6); if(senha.length < 6) ok = false;
+  setErrorAuth('f-codigoCadastro', !codigo); if(!codigo) ok = false;
+  if(!ok) return;
+
+  if(!endpointConfigurado()){
+    const msg = document.getElementById('msgCadastro');
+    msg.classList.add('error');
+    document.getElementById('msgCadastroText').textContent = 'Sistema ainda não conectado à planilha. Veja o SETUP.md.';
+    return;
+  }
+
+  const btn = document.getElementById('btnCadastrarUsuario');
+  const spinner = document.getElementById('spinnerCadastro');
+  const msg = document.getElementById('msgCadastro');
+  const msgText = document.getElementById('msgCadastroText');
+  msg.classList.remove('error','success');
+  btn.disabled = true; spinner.classList.add('on'); msgText.textContent = 'Criando conta...';
+
+  try{
+    const senhaHash = await sha256(senha);
+    const resp = await fetch(ENDPOINT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ acao: 'cadastrarUsuario', nome, role: tipoAcesso, transportadora, usuario, senhaHash, codigoCadastro: codigo })
+    });
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.error || 'Não foi possível criar a conta.');
+    msg.classList.add('success');
+    msgText.textContent = 'Conta criada! Você já pode entrar.';
+    document.getElementById('formCadastroUsuario').reset();
+    document.getElementById('f-novaTransportadora').style.display = 'none';
+    setTimeout(() => document.getElementById('toggleLogin').click(), 1200);
+  } catch(err){
+    msg.classList.add('error');
+    msgText.textContent = err.message;
+  } finally {
+    btn.disabled = false; spinner.classList.remove('on');
+  }
+});
+
+// ---- sair ----
+document.getElementById('btnSair').addEventListener('click', () => {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+});
+
+// ---- entrar no app após login ----
+function entrarNoApp(){
+  document.getElementById('view-login').style.display = 'none';
+  document.getElementById('view-app').style.display = 'block';
+  document.getElementById('chipNome').textContent = sessaoAtual.nome || sessaoAtual.usuario;
+  document.getElementById('chipRole').textContent = sessaoAtual.role === 'LLE' ? 'Grupo LLE' : sessaoAtual.transportadora;
+
+  // se for transportadora, trava o campo Transportadora no cadastro e no extrator
+  if(sessaoAtual.role !== 'LLE'){
+    const selTransp = document.getElementById('transportadora');
+    selTransp.value = sessaoAtual.transportadora;
+    selTransp.disabled = true;
+  }
+
+  carregarPainel();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const salva = sessionStorage.getItem(SESSION_KEY);
+  if(salva){
+    sessaoAtual = JSON.parse(salva);
+    entrarNoApp();
+  }
+});
+
+/* =========================================================
+   NAVEGAÇÃO ENTRE ABAS
+   ========================================================= */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-' + btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab === 'painel') carregarPainel();
+  });
+});
+
+/* =========================================================
+   ABA 1 — CADASTRO DE MOTORISTA
+   ========================================================= */
+const files = { cnh:null, crlv:null, foto:null, comprovante:null };
+let currentStep = 1;
+const panels = document.querySelectorAll('.panel-step');
+const stops = document.querySelectorAll('#view-cadastro .stop');
+const routeFill = document.getElementById('routeFill');
+
+function goToStep(n){
+  currentStep = n;
+  panels.forEach(p => p.classList.toggle('active', +p.dataset.panel === n));
+  stops.forEach(s => {
+    const idx = +s.dataset.stop;
+    s.classList.toggle('done', idx < n);
+    s.classList.toggle('active', idx === n);
+  });
+  routeFill.style.width = (((n-1)/3)*100) + '%';
+}
+
+function setError(fieldId, show){ const el = document.getElementById(fieldId); if(el) el.classList.toggle('has-error', show); }
+
+function validCPF(cpf){
+  cpf = cpf.replace(/\D/g,'');
+  if(cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+  let sum = 0; for(let i=0;i<9;i++) sum += parseInt(cpf[i]) * (10-i);
+  let d1 = (sum*10) % 11; if(d1===10) d1=0;
+  if(d1 !== parseInt(cpf[9])) return false;
+  sum = 0; for(let i=0;i<10;i++) sum += parseInt(cpf[i]) * (11-i);
+  let d2 = (sum*10) % 11; if(d2===10) d2=0;
+  return d2 === parseInt(cpf[10]);
+}
+document.getElementById('cpf').addEventListener('input', (e) => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,11);
+  if(v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+  else if(v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+  else if(v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+  e.target.value = v;
+});
+document.getElementById('telefone').addEventListener('input', (e) => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,11);
+  if(v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3');
+  else if(v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+  else if(v.length > 2) v = v.replace(/(\d{2})(\d{1,5})/, '($1) $2');
+  e.target.value = v;
+});
+function validTelefone(tel){ const d = tel.replace(/\D/g,''); return d.length === 10 || d.length === 11; }
+
+function validateStep1(){
+  let ok = true;
+  const nome = document.getElementById('nome').value.trim();
+  const cpf = document.getElementById('cpf').value.trim();
+  const tipo = document.getElementById('tipoVeiculo').value;
+  const transp = document.getElementById('transportadora').value;
+  const telefone = document.getElementById('telefone').value.trim();
+  setError('f-nome', nome.length < 4); if(nome.length < 4) ok = false;
+  setError('f-cpf', !validCPF(cpf)); if(!validCPF(cpf)) ok = false;
+  setError('f-tipoVeiculo', !tipo); if(!tipo) ok = false;
+  setError('f-transportadora', !transp); if(!transp) ok = false;
+  setError('f-telefone', !validTelefone(telefone)); if(!validTelefone(telefone)) ok = false;
+  return ok;
+}
+function validateStep2(){
+  const allFilled = Object.values(files).every(f => f !== null);
+  document.getElementById('err-docs').style.display = allFilled ? 'none' : 'block';
+  return allFilled;
+}
+
+function wireUpload(key, inputId, cardId){
+  const input = document.getElementById(inputId);
+  const card = document.getElementById(cardId);
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    if(!file) return;
+    if(file.size > 8*1024*1024){ alert('Arquivo maior que 8 MB.'); input.value=''; return; }
+    files[key] = file;
+    card.classList.add('filled');
+    card.querySelector('.upload-file').textContent = file.name;
+  });
+}
+wireUpload('cnh','doc-cnh','card-cnh');
+wireUpload('crlv','doc-crlv','card-crlv');
+wireUpload('foto','doc-foto','card-foto');
+wireUpload('comprovante','doc-comprovante','card-comprovante');
+
+document.getElementById('toStep2').addEventListener('click', () => { if(validateStep1()) goToStep(2); });
+document.getElementById('toStep1').addEventListener('click', () => goToStep(1));
+document.getElementById('toStep3').addEventListener('click', () => { if(validateStep2()){ buildReview(); goToStep(3); } });
+document.getElementById('toStep2b').addEventListener('click', () => goToStep(2));
+document.getElementById('novoCadastroBtn').addEventListener('click', () => {
+  Object.keys(files).forEach(k => files[k] = null);
+  document.querySelectorAll('#view-cadastro .upload-card').forEach(c => { c.classList.remove('filled'); c.querySelector('.upload-file').textContent=''; });
+  document.getElementById('cadastroForm').reset();
+  if(sessaoAtual.role !== 'LLE') document.getElementById('transportadora').value = sessaoAtual.transportadora;
+  goToStep(1);
+});
+
+function buildReview(){
+  const nome = document.getElementById('nome').value.trim();
+  const cpf = document.getElementById('cpf').value.trim();
+  const tipo = document.getElementById('tipoVeiculo').value;
+  const transp = document.getElementById('transportadora').value;
+  const telefone = document.getElementById('telefone').value.trim();
+  const rows = [
+    ['Nome', nome], ['CPF', cpf], ['Telefone', telefone], ['Tipo de veículo', tipo], ['Transportadora', transp],
+    ['CNH', files.cnh.name], ['CRLV', files.crlv.name], ['Foto 5x7', files.foto.name], ['Comprovante de residência', files.comprovante.name],
+  ];
+  document.getElementById('reviewList').innerHTML = rows.map(([k,v]) => `<div class="review-row"><span>${k}</span><span>${v}</span></div>`).join('');
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function pad(n){ return String(n).padStart(2,'0'); }
+
+document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if(!validateStep1() || !validateStep2()) return;
+  const submitBtn = document.getElementById('submitBtn');
+  const spinner = document.getElementById('spinner');
+  const statusText = document.getElementById('statusText');
+  const statusLine = document.getElementById('statusLine');
+  statusLine.classList.remove('error','success');
+  submitBtn.disabled = true; spinner.classList.add('on'); statusText.textContent = 'Enviando documentos...';
+
+  try{
+    const now = new Date();
+    const dataCadastro = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
+    const horaCadastro = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    const [cnhB64, crlvB64, fotoB64, compB64] = await Promise.all([
+      fileToBase64(files.cnh), fileToBase64(files.crlv), fileToBase64(files.foto), fileToBase64(files.comprovante)
+    ]);
+    const payload = {
+      acao: 'cadastrarMotorista',
+      usuario: sessaoAtual.usuario, senhaHash: sessaoAtual.senhaHash,
+      nome: document.getElementById('nome').value.trim(),
+      cpf: document.getElementById('cpf').value.trim(),
+      telefone: document.getElementById('telefone').value.trim(),
+      tipoVeiculo: document.getElementById('tipoVeiculo').value,
+      transportadora: document.getElementById('transportadora').value,
+      dataCadastro, horaCadastro,
+      arquivos: {
+        cnh: { nome: files.cnh.name, tipo: files.cnh.type, base64: cnhB64 },
+        crlv: { nome: files.crlv.name, tipo: files.crlv.type, base64: crlvB64 },
+        foto: { nome: files.foto.name, tipo: files.foto.type, base64: fotoB64 },
+        comprovante: { nome: files.comprovante.name, tipo: files.comprovante.type, base64: compB64 },
+      }
+    };
+    const resp = await fetch(ENDPOINT_URL, { method:'POST', body: JSON.stringify(payload) });
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.error || 'Falha ao salvar');
+    document.getElementById('protocolo').textContent = 'Protocolo ' + data.protocolo;
+    goToStep(4);
+  } catch(err){
+    statusLine.classList.add('error');
+    statusText.textContent = 'Não foi possível enviar agora. ' + (err.message || '');
+  } finally {
+    submitBtn.disabled = false; spinner.classList.remove('on');
+  }
+});
+
+/* =========================================================
+   ABA 2 — PAINEL DE MOTORISTAS
+   ========================================================= */
+let motoristas = [];
+
+function statusBadge(status){
+  if(!status) return '<span class="badge pendente">Pendente</span>';
+  if(status === 'Ok') return '<span class="badge ok">Lido pela IA</span>';
+  if(status === 'Não configurada') return '<span class="badge pendente">IA não configurada</span>';
+  return '<span class="badge erro">Falhou</span>';
+}
+
+function carregarPainel(){
+  const conteudo = document.getElementById('conteudoPainel');
+  conteudo.innerHTML = '<div class="loading">Carregando motoristas...</div>';
+  if(!endpointConfigurado()){
+    conteudo.innerHTML = '<div class="error-box">Sistema ainda não conectado à planilha. Veja o SETUP.md.</div>';
+    return;
+  }
+  fetch(`${ENDPOINT_URL}?action=listarMotoristas&usuario=${encodeURIComponent(sessaoAtual.usuario)}&senhaHash=${encodeURIComponent(sessaoAtual.senhaHash)}`)
+    .then(r => r.json())
+    .then(data => {
+      if(!data.ok){ conteudo.innerHTML = `<div class="error-box">${data.error || 'Erro ao carregar dados.'}</div>`; return; }
+      motoristas = data.motoristas || [];
+      renderTabela(motoristas);
+      atualizarStats(motoristas);
+    })
+    .catch(() => { conteudo.innerHTML = '<div class="error-box">Não foi possível conectar.</div>'; });
+}
+document.getElementById('btnAtualizarPainel').addEventListener('click', carregarPainel);
+
+function renderTabela(lista){
+  const conteudo = document.getElementById('conteudoPainel');
+  if(lista.length === 0){ conteudo.innerHTML = '<div class="empty">Nenhum motorista cadastrado ainda.</div>'; return; }
+  const linhas = lista.map((m, i) => `
+    <tr>
+      <td><div class="nome-cell">${escapeHtml(m['Nome']||'—')}</div><div class="sub">${escapeHtml(m['CPF']||'')}${m['Telefone'] ? ' · '+escapeHtml(m['Telefone']) : ''}</div></td>
+      <td>${escapeHtml(m['Transportadora']||'—')}</td>
+      <td>${escapeHtml(m['Tipo de Veículo']||'—')}</td>
+      <td>${escapeHtml(m['Data']||'')} <span class="sub">${escapeHtml(m['Hora']||'')}</span></td>
+      <td>${statusBadge(m['Status Leitura IA'])}</td>
+      <td><button class="btn-ver" onclick="abrirDetalhe(${i})">Ver detalhes</button></td>
+    </tr>`).join('');
+  conteudo.innerHTML = `<table><thead><tr><th>Motorista</th><th>Transportadora</th><th>Veículo</th><th>Cadastrado em</th><th>Documentos</th><th></th></tr></thead><tbody>${linhas}</tbody></table>`;
+}
+function atualizarStats(lista){
+  document.getElementById('statTotal').textContent = lista.length;
+  document.getElementById('statOk').textContent = lista.filter(m => m['Status Leitura IA'] === 'Ok').length;
+  document.getElementById('statPendente').textContent = lista.filter(m => m['Status Leitura IA'] !== 'Ok').length;
+}
+document.getElementById('busca').addEventListener('input', (e) => {
+  const termo = e.target.value.toLowerCase().trim();
+  renderTabela(motoristas.filter(m =>
+    (m['Nome']||'').toLowerCase().includes(termo) ||
+    (m['CPF']||'').toLowerCase().includes(termo) ||
+    (m['Transportadora']||'').toLowerCase().includes(termo)
+  ));
+});
+
+function abrirDetalhe(indice){
+  const m = motoristas[indice];
+  const modal = document.getElementById('modalConteudo');
+  modal.innerHTML = `
+    <div class="modal-head">
+      <div><h2>${escapeHtml(m['Nome']||'—')}</h2><div class="sub">${escapeHtml(m['CPF']||'')} · ${escapeHtml(m['Transportadora']||'')}</div></div>
+      <button class="modal-close" onclick="fecharDetalhe()">✕</button>
+    </div>
+    <div class="section-title">Cadastro</div>
+    <div class="kv">
+      <div class="kv-item"><span>Telefone</span><b>${escapeHtml(m['Telefone']||'—')}</b></div>
+      <div class="kv-item"><span>Tipo de veículo</span><b>${escapeHtml(m['Tipo de Veículo']||'—')}</b></div>
+      <div class="kv-item"><span>Cadastrado em</span><b>${escapeHtml(m['Data']||'')} ${escapeHtml(m['Hora']||'')}</b></div>
+      <div class="kv-item"><span>Protocolo</span><b>${escapeHtml(m['Protocolo']||'—')}</b></div>
+    </div>
+    <div class="section-title">CNH (lido automaticamente)</div>
+    <div class="kv">
+      <div class="kv-item"><span>Nº de registro</span><b>${escapeHtml(m['CNH Nº Registro']||'—')}</b></div>
+      <div class="kv-item"><span>Categoria</span><b>${escapeHtml(m['CNH Categoria']||'—')}</b></div>
+      <div class="kv-item"><span>Validade</span><b>${escapeHtml(m['CNH Validade']||'—')}</b></div>
+      <div class="kv-item"><span>Data de nascimento</span><b>${escapeHtml(m['CNH Data Nascimento']||'—')}</b></div>
+    </div>
+    <div class="section-title">CRLV (lido automaticamente)</div>
+    <div class="kv">
+      <div class="kv-item"><span>Placa</span><b>${escapeHtml(m['CRLV Placa']||'—')}</b></div>
+      <div class="kv-item"><span>Renavam</span><b>${escapeHtml(m['CRLV Renavam']||'—')}</b></div>
+      <div class="kv-item"><span>Marca / Modelo</span><b>${escapeHtml(m['CRLV Marca/Modelo']||'—')}</b></div>
+      <div class="kv-item"><span>Ano fab. / modelo</span><b>${escapeHtml(m['CRLV Ano Fabricação']||'—')}/${escapeHtml(m['CRLV Ano Modelo']||'—')}</b></div>
+      <div class="kv-item"><span>Cor</span><b>${escapeHtml(m['CRLV Cor']||'—')}</b></div>
+      <div class="kv-item"><span>Chassi</span><b>${escapeHtml(m['CRLV Chassi']||'—')}</b></div>
+    </div>
+    <div class="section-title">Documentos enviados</div>
+    <div class="doclinks">${linkDoc(m['CNH'],'Ver CNH')}${linkDoc(m['CRLV'],'Ver CRLV')}${linkDoc(m['Foto 5x7'],'Ver foto 5x7')}${linkDoc(m['Comprovante de Residência'],'Ver comprovante')}</div>
+  `;
+  document.getElementById('overlay').classList.add('open');
+}
+function fecharDetalhe(){ document.getElementById('overlay').classList.remove('open'); }
+document.getElementById('overlay').addEventListener('click', (e) => { if(e.target.id === 'overlay') fecharDetalhe(); });
+function linkDoc(url, texto){ return url ? `<a href="${url}" target="_blank" rel="noopener">📄 ${texto}</a>` : ''; }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* =========================================================
+   ABA 3 — EXTRATOR DE DOCUMENTOS
+   ========================================================= */
+const filesExtrator = { cnh:null, crlv:null };
+function wireUploadExtrator(key, inputId, cardId){
+  const input = document.getElementById(inputId);
+  const card = document.getElementById(cardId);
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    if(!file) return;
+    if(file.size > 8*1024*1024){ alert('Arquivo maior que 8 MB.'); input.value=''; return; }
+    filesExtrator[key] = file;
+    card.classList.add('filled');
+    card.querySelector('.upload-file').textContent = file.name;
+  });
+}
+wireUploadExtrator('cnh','ex-doc-cnh','card-ex-cnh');
+wireUploadExtrator('crlv','ex-doc-crlv','card-ex-crlv');
+
+function campoKV(label, valor){
+  const vazio = !valor;
+  return `<div class="kv-item"><span>${label}</span><b style="${vazio?'color:#B7BECC;font-weight:500;':''}">${vazio ? '—' : valor}</b></div>`;
+}
+function mostrarResultadosExtrator(dados, protocolo){
+  document.getElementById('protocoloExtrator').textContent = 'Protocolo ' + protocolo;
+  document.getElementById('kvCnh').innerHTML = [
+    campoKV('Nome', dados.cnh_nome), campoKV('CPF', dados.cnh_cpf), campoKV('Nº de registro', dados.cnh_numero_registro),
+    campoKV('Categoria', dados.cnh_categoria), campoKV('Data de nascimento', dados.cnh_data_nascimento),
+    campoKV('1ª habilitação', dados.cnh_data_primeira_habilitacao), campoKV('Validade', dados.cnh_validade), campoKV('UF emissão', dados.cnh_uf_emissao),
+  ].join('');
+  document.getElementById('kvCrlv').innerHTML = [
+    campoKV('Placa', dados.crlv_placa), campoKV('Renavam', dados.crlv_renavam), campoKV('Proprietário', dados.crlv_proprietario),
+    campoKV('Marca / Modelo', dados.crlv_marca_modelo), campoKV('Ano fab. / modelo', (dados.crlv_ano_fabricacao||'—')+' / '+(dados.crlv_ano_modelo||'—')),
+    campoKV('Cor', dados.crlv_cor), campoKV('Combustível', dados.crlv_combustivel), campoKV('Categoria do veículo', dados.crlv_categoria),
+    campoKV('Município / UF', dados.crlv_municipio_uf), campoKV('Chassi', dados.crlv_chassi),
+  ].join('');
+  document.getElementById('resultsExtrator').classList.add('show');
+  document.getElementById('extratorForm').style.display = 'none';
+}
+document.getElementById('againBtnExtrator').addEventListener('click', () => {
+  filesExtrator.cnh = null; filesExtrator.crlv = null;
+  document.getElementById('card-ex-cnh').classList.remove('filled');
+  document.getElementById('card-ex-crlv').classList.remove('filled');
+  document.querySelectorAll('#view-extrator .upload-file').forEach(el => el.textContent = '');
+  document.getElementById('resultsExtrator').classList.remove('show');
+  document.getElementById('extratorForm').style.display = 'block';
+  document.getElementById('extratorForm').reset();
+});
+
+document.getElementById('extratorForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const statusText = document.getElementById('statusTextExtrator');
+  const statusLine = document.getElementById('statusLineExtrator');
+  const spinner = document.getElementById('spinnerExtrator');
+  const enviarBtn = document.getElementById('enviarExtratorBtn');
+  statusLine.classList.remove('error','success');
+
+  if(!filesExtrator.cnh || !filesExtrator.crlv){
+    statusLine.classList.add('error'); statusText.textContent = 'Anexe a CNH e o CRLV antes de enviar.'; return;
+  }
+  if(!endpointConfigurado()){
+    statusLine.classList.add('error'); statusText.textContent = 'Sistema ainda não conectado à planilha. Veja o SETUP.md.'; return;
+  }
+
+  enviarBtn.disabled = true; spinner.classList.add('on'); statusText.textContent = 'Lendo os documentos com a IA...';
+
+  try{
+    const now = new Date();
+    const dataEnvio = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
+    const horaEnvio = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    const [cnhB64, crlvB64] = await Promise.all([fileToBase64(filesExtrator.cnh), fileToBase64(filesExtrator.crlv)]);
+    const payload = {
+      acao: 'extrairDocumento',
+      usuario: sessaoAtual.usuario, senhaHash: sessaoAtual.senhaHash,
+      transportadora: sessaoAtual.role === 'LLE' ? '' : sessaoAtual.transportadora,
+      dataEnvio, horaEnvio,
+      arquivos: {
+        cnh: { nome: filesExtrator.cnh.name, tipo: filesExtrator.cnh.type, base64: cnhB64 },
+        crlv: { nome: filesExtrator.crlv.name, tipo: filesExtrator.crlv.type, base64: crlvB64 },
+      }
+    };
+    statusText.textContent = 'Salvando na planilha...';
+    const resp = await fetch(ENDPOINT_URL, { method:'POST', body: JSON.stringify(payload) });
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.error || 'Falha ao processar');
+    statusLine.classList.add('success'); statusText.textContent = 'Concluído.';
+    mostrarResultadosExtrator(data.extraido || {}, data.protocolo || '—');
+  } catch(err){
+    statusLine.classList.add('error');
+    statusText.textContent = 'Não foi possível processar agora. ' + (err.message || '');
+  } finally {
+    enviarBtn.disabled = false; spinner.classList.remove('on');
+  }
+});
+</script>
+</body>
+</html>
