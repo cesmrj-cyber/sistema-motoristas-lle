@@ -24,6 +24,7 @@
   .topbar-inner{max-width:1080px; margin:0 auto; position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
   .brand-row{display:flex; align-items:center; gap:10px; font-size:12.5px; letter-spacing:.14em; font-weight:700; color:var(--gold); text-transform:uppercase;}
   .brand-row .dot{width:4px;height:4px;border-radius:50%;background:var(--gold); opacity:.7;}
+  .logo-img{height:38px; display:block; margin-bottom:8px;}
   .topbar h1{font-size:20px; font-weight:800; margin-top:4px;}
   .user-chip{display:flex; align-items:center; gap:10px; font-size:13px; color:#C6D2EA;}
   .user-chip b{color:#fff;}
@@ -167,7 +168,6 @@
   .doclinks a{font-size:12.5px; font-weight:700; color:var(--navy); text-decoration:none; border:1.5px solid var(--line); border-radius:8px; padding:7px 11px;}
   .doclinks a:hover{border-color:var(--navy); background:var(--paper);}
 
-  /* ---------- extrator ---------- */
   .results{display:none;}
   .results.show{display:block;}
 
@@ -183,6 +183,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div>
+        <img src="data:image/png;base64,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" alt="Grupo LLE" class="logo-img">
         <div class="brand-row">GRUPO LLE <span class="dot"></span> TRANSPORTES</div>
         <h1>Sistema de Motoristas</h1>
       </div>
@@ -276,6 +277,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div>
+        <img src="data:image/png;base64,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" alt="Grupo LLE" class="logo-img">
         <div class="brand-row">GRUPO LLE <span class="dot"></span> TRANSPORTES</div>
         <h1>Sistema de Motoristas</h1>
       </div>
@@ -291,7 +293,6 @@
     <div class="tabs-inner">
       <button class="tab-btn active" data-tab="cadastro">Cadastro de Motorista</button>
       <button class="tab-btn" data-tab="painel">Painel de Motoristas</button>
-      <button class="tab-btn" data-tab="extrator">Extrator de Documentos</button>
     </div>
   </div>
 
@@ -327,8 +328,8 @@
                 <label for="tipoVeiculo">Tipo de veículo</label>
                 <select id="tipoVeiculo">
                   <option value="" selected disabled>Selecione</option>
-                  <option>Moto</option><option>Fiorino / Utilitário</option><option>VUC</option>
-                  <option>3/4</option><option>Toco</option><option>Truck</option>
+                  <option>Veículo de Passeio</option><option>Moto</option><option>Fiorino / Utilitário</option><option>VUC</option>
+                  <option>Bongo</option><option>3/4</option><option>Toco</option><option>Truck</option>
                   <option>Carreta</option><option>Bitrem</option><option>Outro</option>
                 </select>
                 <div class="err">Selecione o tipo de veículo.</div>
@@ -376,8 +377,13 @@
                 <div class="upload-icon">END.</div><div class="upload-title">Comprovante de residência</div>
                 <div class="upload-sub">Últimos 3 meses</div><div class="upload-file"></div><div class="upload-check">✓</div>
               </label>
+              <label class="upload-card" id="card-fotoveiculo">
+                <input type="file" id="doc-fotoveiculo" accept="image/*">
+                <div class="upload-icon">VEÍC.</div><div class="upload-title">Foto do veículo</div>
+                <div class="upload-sub">Veículo utilizado nas entregas</div><div class="upload-file"></div><div class="upload-check">✓</div>
+              </label>
             </div>
-            <div class="err" id="err-docs" style="display:none; margin-top:12px;">Envie os 4 documentos para continuar.</div>
+            <div class="err" id="err-docs" style="display:none; margin-top:12px;">Envie os 5 documentos para continuar.</div>
             <div class="actions">
               <button type="button" class="btn btn-ghost" id="toStep1">Voltar</button>
               <button type="button" class="btn btn-primary" id="toStep3">Continuar</button>
@@ -421,47 +427,6 @@
           <button id="btnAtualizarPainel">↻ Atualizar</button>
         </div>
         <div id="conteudoPainel"><div class="loading">Carregando motoristas...</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ---------------- ABA: EXTRATOR ---------------- -->
-  <div class="view" id="view-extrator">
-    <div class="wrap">
-      <div class="card">
-        <div style="margin-bottom:20px;">
-          <h2 style="font-size:18px; color:var(--navy);">Extrator de CNH e CRLV</h2>
-          <p style="color:var(--ink-soft); font-size:14px; margin-top:6px;">Anexe os dois documentos — a IA lê e extrai os dados automaticamente e já salva numa planilha.</p>
-        </div>
-        <form id="extratorForm">
-          <div class="uploads" style="margin-bottom:18px;">
-            <label class="upload-card" id="card-ex-cnh">
-              <input type="file" id="ex-doc-cnh" accept=".pdf,image/*">
-              <div class="upload-icon">CNH</div><div class="upload-title">CNH</div>
-              <div class="upload-sub">Foto ou PDF, frente e verso</div><div class="upload-file"></div><div class="upload-check">✓</div>
-            </label>
-            <label class="upload-card" id="card-ex-crlv">
-              <input type="file" id="ex-doc-crlv" accept=".pdf,image/*">
-              <div class="upload-icon">CRLV</div><div class="upload-title">CRLV</div>
-              <div class="upload-sub">Documento do veículo, ano vigente</div><div class="upload-file"></div><div class="upload-check">✓</div>
-            </label>
-          </div>
-          <button type="submit" class="btn btn-primary" id="enviarExtratorBtn">Enviar e extrair dados</button>
-          <div class="msg-line" id="statusLineExtrator"><span class="spinner" id="spinnerExtrator"></span><span id="statusTextExtrator"></span></div>
-        </form>
-
-        <div class="results" id="resultsExtrator">
-          <div style="display:flex; align-items:center; gap:10px; margin:22px 0 10px;">
-            <div class="badge ok" style="width:26px;height:26px;border-radius:50%;justify-content:center;">✓</div>
-            <h2 style="font-size:16px; color:var(--navy);">Dados extraídos</h2>
-            <span style="font-size:12px; color:var(--ink-soft); margin-left:auto;" id="protocoloExtrator"></span>
-          </div>
-          <div class="section-title">CNH</div>
-          <div class="kv" id="kvCnh"></div>
-          <div class="section-title">CRLV</div>
-          <div class="kv" id="kvCrlv"></div>
-          <button type="button" class="btn btn-ghost" style="margin-top:18px;" id="againBtnExtrator">Enviar outro documento</button>
-        </div>
       </div>
     </div>
   </div>
@@ -623,7 +588,7 @@ function entrarNoApp(){
   document.getElementById('chipNome').textContent = sessaoAtual.nome || sessaoAtual.usuario;
   document.getElementById('chipRole').textContent = sessaoAtual.role === 'LLE' ? 'Grupo LLE' : sessaoAtual.transportadora;
 
-  // se for transportadora, trava o campo Transportadora no cadastro e no extrator
+  // se for transportadora, trava o campo Transportadora no cadastro
   if(sessaoAtual.role !== 'LLE'){
     const selTransp = document.getElementById('transportadora');
     selTransp.value = sessaoAtual.transportadora;
@@ -657,7 +622,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 /* =========================================================
    ABA 1 — CADASTRO DE MOTORISTA
    ========================================================= */
-const files = { cnh:null, crlv:null, foto:null, comprovante:null };
+const files = { cnh:null, crlv:null, foto:null, comprovante:null, fotoVeiculo:null };
 let currentStep = 1;
 const panels = document.querySelectorAll('.panel-step');
 const stops = document.querySelectorAll('#view-cadastro .stop');
@@ -738,6 +703,7 @@ wireUpload('cnh','doc-cnh','card-cnh');
 wireUpload('crlv','doc-crlv','card-crlv');
 wireUpload('foto','doc-foto','card-foto');
 wireUpload('comprovante','doc-comprovante','card-comprovante');
+wireUpload('fotoVeiculo','doc-fotoveiculo','card-fotoveiculo');
 
 document.getElementById('toStep2').addEventListener('click', () => { if(validateStep1()) goToStep(2); });
 document.getElementById('toStep1').addEventListener('click', () => goToStep(1));
@@ -759,7 +725,7 @@ function buildReview(){
   const telefone = document.getElementById('telefone').value.trim();
   const rows = [
     ['Nome', nome], ['CPF', cpf], ['Telefone', telefone], ['Tipo de veículo', tipo], ['Transportadora', transp],
-    ['CNH', files.cnh.name], ['CRLV', files.crlv.name], ['Foto 5x7', files.foto.name], ['Comprovante de residência', files.comprovante.name],
+    ['CNH', files.cnh.name], ['CRLV', files.crlv.name], ['Foto 5x7', files.foto.name], ['Comprovante de residência', files.comprovante.name], ['Foto do veículo', files.fotoVeiculo.name],
   ];
   document.getElementById('reviewList').innerHTML = rows.map(([k,v]) => `<div class="review-row"><span>${k}</span><span>${v}</span></div>`).join('');
 }
@@ -788,8 +754,8 @@ document.getElementById('cadastroForm').addEventListener('submit', async (e) => 
     const now = new Date();
     const dataCadastro = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
     const horaCadastro = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-    const [cnhB64, crlvB64, fotoB64, compB64] = await Promise.all([
-      fileToBase64(files.cnh), fileToBase64(files.crlv), fileToBase64(files.foto), fileToBase64(files.comprovante)
+    const [cnhB64, crlvB64, fotoB64, compB64, fotoVeiculoB64] = await Promise.all([
+      fileToBase64(files.cnh), fileToBase64(files.crlv), fileToBase64(files.foto), fileToBase64(files.comprovante), fileToBase64(files.fotoVeiculo)
     ]);
     const payload = {
       acao: 'cadastrarMotorista',
@@ -805,6 +771,7 @@ document.getElementById('cadastroForm').addEventListener('submit', async (e) => 
         crlv: { nome: files.crlv.name, tipo: files.crlv.type, base64: crlvB64 },
         foto: { nome: files.foto.name, tipo: files.foto.type, base64: fotoB64 },
         comprovante: { nome: files.comprovante.name, tipo: files.comprovante.type, base64: compB64 },
+        fotoVeiculo: { nome: files.fotoVeiculo.name, tipo: files.fotoVeiculo.type, base64: fotoVeiculoB64 },
       }
     };
     const resp = await fetch(ENDPOINT_URL, { method:'POST', body: JSON.stringify(payload) });
@@ -912,7 +879,7 @@ function abrirDetalhe(indice){
       <div class="kv-item"><span>Chassi</span><b>${escapeHtml(m['CRLV Chassi']||'—')}</b></div>
     </div>
     <div class="section-title">Documentos enviados</div>
-    <div class="doclinks">${linkDoc(m['CNH'],'Ver CNH')}${linkDoc(m['CRLV'],'Ver CRLV')}${linkDoc(m['Foto 5x7'],'Ver foto 5x7')}${linkDoc(m['Comprovante de Residência'],'Ver comprovante')}</div>
+    <div class="doclinks">${linkDoc(m['CNH'],'Ver CNH')}${linkDoc(m['CRLV'],'Ver CRLV')}${linkDoc(m['Foto 5x7'],'Ver foto 5x7')}${linkDoc(m['Comprovante de Residência'],'Ver comprovante')}${linkDoc(m['Foto do Veículo'],'Ver foto do veículo')}</div>
   `;
   document.getElementById('overlay').classList.add('open');
 }
@@ -920,101 +887,6 @@ function fecharDetalhe(){ document.getElementById('overlay').classList.remove('o
 document.getElementById('overlay').addEventListener('click', (e) => { if(e.target.id === 'overlay') fecharDetalhe(); });
 function linkDoc(url, texto){ return url ? `<a href="${url}" target="_blank" rel="noopener">📄 ${texto}</a>` : ''; }
 function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-/* =========================================================
-   ABA 3 — EXTRATOR DE DOCUMENTOS
-   ========================================================= */
-const filesExtrator = { cnh:null, crlv:null };
-function wireUploadExtrator(key, inputId, cardId){
-  const input = document.getElementById(inputId);
-  const card = document.getElementById(cardId);
-  input.addEventListener('change', () => {
-    const file = input.files[0];
-    if(!file) return;
-    if(file.size > 8*1024*1024){ alert('Arquivo maior que 8 MB.'); input.value=''; return; }
-    filesExtrator[key] = file;
-    card.classList.add('filled');
-    card.querySelector('.upload-file').textContent = file.name;
-  });
-}
-wireUploadExtrator('cnh','ex-doc-cnh','card-ex-cnh');
-wireUploadExtrator('crlv','ex-doc-crlv','card-ex-crlv');
-
-function campoKV(label, valor){
-  const vazio = !valor;
-  return `<div class="kv-item"><span>${label}</span><b style="${vazio?'color:#B7BECC;font-weight:500;':''}">${vazio ? '—' : valor}</b></div>`;
-}
-function mostrarResultadosExtrator(dados, protocolo){
-  document.getElementById('protocoloExtrator').textContent = 'Protocolo ' + protocolo;
-  document.getElementById('kvCnh').innerHTML = [
-    campoKV('Nome', dados.cnh_nome), campoKV('CPF', dados.cnh_cpf), campoKV('Nº de registro', dados.cnh_numero_registro),
-    campoKV('Categoria', dados.cnh_categoria), campoKV('Data de nascimento', dados.cnh_data_nascimento),
-    campoKV('1ª habilitação', dados.cnh_data_primeira_habilitacao), campoKV('Validade', dados.cnh_validade), campoKV('UF emissão', dados.cnh_uf_emissao),
-  ].join('');
-  document.getElementById('kvCrlv').innerHTML = [
-    campoKV('Placa', dados.crlv_placa), campoKV('Renavam', dados.crlv_renavam), campoKV('Proprietário', dados.crlv_proprietario),
-    campoKV('Marca / Modelo', dados.crlv_marca_modelo), campoKV('Ano fab. / modelo', (dados.crlv_ano_fabricacao||'—')+' / '+(dados.crlv_ano_modelo||'—')),
-    campoKV('Cor', dados.crlv_cor), campoKV('Combustível', dados.crlv_combustivel), campoKV('Categoria do veículo', dados.crlv_categoria),
-    campoKV('Município / UF', dados.crlv_municipio_uf), campoKV('Chassi', dados.crlv_chassi),
-  ].join('');
-  document.getElementById('resultsExtrator').classList.add('show');
-  document.getElementById('extratorForm').style.display = 'none';
-}
-document.getElementById('againBtnExtrator').addEventListener('click', () => {
-  filesExtrator.cnh = null; filesExtrator.crlv = null;
-  document.getElementById('card-ex-cnh').classList.remove('filled');
-  document.getElementById('card-ex-crlv').classList.remove('filled');
-  document.querySelectorAll('#view-extrator .upload-file').forEach(el => el.textContent = '');
-  document.getElementById('resultsExtrator').classList.remove('show');
-  document.getElementById('extratorForm').style.display = 'block';
-  document.getElementById('extratorForm').reset();
-});
-
-document.getElementById('extratorForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const statusText = document.getElementById('statusTextExtrator');
-  const statusLine = document.getElementById('statusLineExtrator');
-  const spinner = document.getElementById('spinnerExtrator');
-  const enviarBtn = document.getElementById('enviarExtratorBtn');
-  statusLine.classList.remove('error','success');
-
-  if(!filesExtrator.cnh || !filesExtrator.crlv){
-    statusLine.classList.add('error'); statusText.textContent = 'Anexe a CNH e o CRLV antes de enviar.'; return;
-  }
-  if(!endpointConfigurado()){
-    statusLine.classList.add('error'); statusText.textContent = 'Sistema ainda não conectado à planilha. Veja o SETUP.md.'; return;
-  }
-
-  enviarBtn.disabled = true; spinner.classList.add('on'); statusText.textContent = 'Lendo os documentos com a IA...';
-
-  try{
-    const now = new Date();
-    const dataEnvio = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
-    const horaEnvio = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-    const [cnhB64, crlvB64] = await Promise.all([fileToBase64(filesExtrator.cnh), fileToBase64(filesExtrator.crlv)]);
-    const payload = {
-      acao: 'extrairDocumento',
-      usuario: sessaoAtual.usuario, senhaHash: sessaoAtual.senhaHash,
-      transportadora: sessaoAtual.role === 'LLE' ? '' : sessaoAtual.transportadora,
-      dataEnvio, horaEnvio,
-      arquivos: {
-        cnh: { nome: filesExtrator.cnh.name, tipo: filesExtrator.cnh.type, base64: cnhB64 },
-        crlv: { nome: filesExtrator.crlv.name, tipo: filesExtrator.crlv.type, base64: crlvB64 },
-      }
-    };
-    statusText.textContent = 'Salvando na planilha...';
-    const resp = await fetch(ENDPOINT_URL, { method:'POST', body: JSON.stringify(payload) });
-    const data = await resp.json();
-    if(!data.ok) throw new Error(data.error || 'Falha ao processar');
-    statusLine.classList.add('success'); statusText.textContent = 'Concluído.';
-    mostrarResultadosExtrator(data.extraido || {}, data.protocolo || '—');
-  } catch(err){
-    statusLine.classList.add('error');
-    statusText.textContent = 'Não foi possível processar agora. ' + (err.message || '');
-  } finally {
-    enviarBtn.disabled = false; spinner.classList.remove('on');
-  }
-});
 </script>
 </body>
 </html>
